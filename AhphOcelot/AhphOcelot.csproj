@@ -6,8 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="MySql.Data" Version="8.0.19" />
     <PackageReference Include="Ocelot" Version="13.5.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AuthPlatform.Model\AuthPlatform.Model.csproj" />
   </ItemGroup>
 
 </Project>

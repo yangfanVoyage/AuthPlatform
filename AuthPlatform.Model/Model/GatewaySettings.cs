@@ -1,8 +1,11 @@
 ﻿using SqlSugar;
 using System.ComponentModel.DataAnnotations;
 
-namespace AuthPlatform.Gateway.Model
+namespace AuthPlatform.Model
 {
+    /// <summary>
+    /// 网关全局配置
+    /// </summary>
     public class GatewaySettings : ViewModelBase
     {
         /// <summary>

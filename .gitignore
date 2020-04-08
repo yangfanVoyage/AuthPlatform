@@ -6,3 +6,7 @@
 /AhphOcelot/obj
 /AuthPlatform.Gateway/bin/Debug/netcoreapp3.0
 /AuthPlatform.Gateway/obj
+/AuthPlatform.Model/bin/Debug/netstandard2.0
+/AuthPlatform.Model/obj
+/TestGateway/bin/Debug/netcoreapp3.0
+/TestGateway/obj

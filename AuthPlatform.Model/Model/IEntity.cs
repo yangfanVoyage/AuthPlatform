@@ -1,4 +1,4 @@
-﻿namespace AuthPlatform.Gateway.Model
+﻿namespace AuthPlatform.Model
 {
     public interface IEntity
     {

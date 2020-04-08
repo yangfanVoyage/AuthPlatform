@@ -1,5 +1,7 @@
 ﻿using AhphOcelot.Configuration;
+using AuthPlatform.Model;
 using Dapper;
+using MySql.Data.MySqlClient;
 using Ocelot.Configuration.File;
 using Ocelot.Responses;
 using System;
@@ -33,51 +35,53 @@ namespace AhphOcelot
             //提取默认启用的路由配置信息
             string glbsql = "select * from AhphGlobalConfiguration where IsDefault=1 and InfoStatus=1";
             //提取全局配置信息
-            using (var connection = new SqlConnection(_option.DbConnectionStrings))
+            using (var connection = new MySqlConnection(_option.DbConnectionStrings))
             {
-                var result = await connection.QueryFirstOrDefaultAsync<AhphGlobalConfiguration>(glbsql);
+                var result = await connection.QueryFirstOrDefaultAsync<GatewaySettings>(glbsql);
                 if (result != null)
                 {
                     var glb = new FileGlobalConfiguration();
                     //赋值全局信息
-                    glb.BaseUrl = result.BaseUrl;
-                    glb.DownstreamScheme = result.DownstreamScheme;
-                    glb.RequestIdKey = result.RequestIdKey;
-                    glb.HttpHandlerOptions = result.HttpHandlerOptions?.ToObject<FileHttpHandlerOptions>();
-                    glb.LoadBalancerOptions = result.LoadBalancerOptions?.ToObject<FileLoadBalancerOptions>();
-                    glb.QoSOptions = result.QoSOptions?.ToObject<FileQoSOptions>();
-                    glb.ServiceDiscoveryProvider = result.ServiceDiscoveryProvider?.ToObject<FileServiceDiscoveryProvider>();
-                    file.GlobalConfiguration = glb;
+                    //glb.BaseUrl = result.BaseUrl;
+                    //glb.DownstreamScheme = result.DownstreamScheme;
+                    //glb.RequestIdKey = result.RequestIdKey;
+                    //glb.HttpHandlerOptions = result.HttpHandlerOptions?.ToObject<FileHttpHandlerOptions>();
+                    //glb.LoadBalancerOptions = result.LoadBalancerOptions?.ToObject<FileLoadBalancerOptions>();
+                    //glb.QoSOptions = result.QoSOptions?.ToObject<FileQoSOptions>();
+                    //glb.ServiceDiscoveryProvider = result.ServiceDiscoveryProvider?.ToObject<FileServiceDiscoveryProvider>();
+                    //file.GlobalConfiguration = glb;
 
-                    //提取所有路由信息
-                    string routesql = "select T2.* from AhphConfigReRoutes T1 inner join AhphReRoute T2 on T1.ReRouteId=T2.ReRouteId where AhphId=@AhphId and InfoStatus=1";
-                    var routeresult = (await connection.QueryAsync<AhphReRoute>(routesql, new { result.AhphId }))?.AsList();
-                    if (routeresult != null && routeresult.Count > 0)
-                    {
-                        var reroutelist = new List<FileReRoute>();
-                        foreach (var model in routeresult)
-                        {
-                            var m = new FileReRoute();
-                            m.AuthenticationOptions = model.AuthenticationOptions?.ToObject<FileAuthenticationOptions>();
-                            m.FileCacheOptions = model.CacheOptions?.ToObject<FileCacheOptions>();
-                            m.DelegatingHandlers = model.DelegatingHandlers?.ToObject<List<string>>();
-                            m.LoadBalancerOptions = model.LoadBalancerOptions?.ToObject<FileLoadBalancerOptions>();
-                            m.QoSOptions = model.QoSOptions?.ToObject<FileQoSOptions>();
-                            m.DownstreamHostAndPorts = model.DownstreamHostAndPorts?.ToObject<List<FileHostAndPort>>();
-                            //开始赋值
-                            m.DownstreamPathTemplate = model.DownstreamPathTemplate;
-                            m.DownstreamScheme = model.DownstreamScheme;
-                            m.Key = model.RequestIdKey;
-                            m.Priority = model.Priority ?? 0;
-                            m.RequestIdKey = model.RequestIdKey;
-                            m.ServiceName = model.ServiceName;
-                            m.UpstreamHost = model.UpstreamHost;
-                            m.UpstreamHttpMethod = model.UpstreamHttpMethod?.ToObject<List<string>>();
-                            m.UpstreamPathTemplate = model.UpstreamPathTemplate;
-                            reroutelist.Add(m);
-                        }
-                        file.ReRoutes = reroutelist;
-                    }
+                    ////提取所有路由信息
+                    //string routesql = "select T2.* from AhphConfigReRoutes T1 inner join AhphReRoute T2 on T1.ReRouteId=T2.ReRouteId where AhphId=@AhphId and InfoStatus=1";
+                    //var routeresult = (await connection.QueryAsync<AhphReRoute>(routesql, new { result.AhphId }))?.AsList();
+                    //if (routeresult != null && routeresult.Count > 0)
+                    //{
+                    //    var reroutelist = new List<FileReRoute>();
+                    //    foreach (var model in routeresult)
+                    //    {
+                    //        var m = new FileReRoute
+                    //        {
+                    //            AuthenticationOptions = model.AuthenticationOptions?.ToObject<FileAuthenticationOptions>(),
+                    //            FileCacheOptions = model.CacheOptions?.ToObject<FileCacheOptions>(),
+                    //            DelegatingHandlers = model.DelegatingHandlers?.ToObject<List<string>>(),
+                    //            LoadBalancerOptions = model.LoadBalancerOptions?.ToObject<FileLoadBalancerOptions>(),
+                    //            QoSOptions = model.QoSOptions?.ToObject<FileQoSOptions>(),
+                    //            DownstreamHostAndPorts = model.DownstreamHostAndPorts?.ToObject<List<FileHostAndPort>>(),
+                    //            //开始赋值
+                    //            DownstreamPathTemplate = model.DownstreamPathTemplate,
+                    //            DownstreamScheme = model.DownstreamScheme,
+                    //            Key = model.RequestIdKey,
+                    //            Priority = model.Priority ?? 0,
+                    //            RequestIdKey = model.RequestIdKey,
+                    //            ServiceName = model.ServiceName,
+                    //            UpstreamHost = model.UpstreamHost,
+                    //            UpstreamHttpMethod = model.UpstreamHttpMethod?.ToObject<List<string>>(),
+                    //            UpstreamPathTemplate = model.UpstreamPathTemplate
+                    //        };
+                    //        reroutelist.Add(m);
+                    //    }
+                    //    file.ReRoutes = reroutelist;
+                    //}
                 }
                 else
                 {
