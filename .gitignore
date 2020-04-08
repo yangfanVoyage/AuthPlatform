@@ -3,3 +3,6 @@
 ################################################################################
 
 /AhphOcelot/bin/Debug/netstandard2.0
+/AhphOcelot/obj
+/AuthPlatform.Gateway/bin/Debug/netcoreapp3.0
+/AuthPlatform.Gateway/obj
